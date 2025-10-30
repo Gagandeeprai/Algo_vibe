@@ -2,118 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Group Chat Clusters Visualization</title>
+<title>Group Chat Clusters</title>
+<link rel="stylesheet" href="style.css">
 <script src="https://d3js.org/d3.v7.min.js"></script>
-<style>
-  body {
-    background: #f9fafb;
-    font-family: Arial, sans-serif;
-    text-align: center;
-  }
-  svg {
-    width: 90vw;
-    height: 80vh;
-    border: 1px solid #ddd;
-    margin-top: 20px;
-  }
-  h1 {
-    color: #333;
-  }
-</style>
 </head>
 <body>
 <h1>Group Chat Clusters</h1>
+
+<form id="graphForm">
+  <label>Number of Students (n):</label>
+  <input type="number" id="n" required><br><br>
+
+  <label>Connections (u v, comma-separated):</label><br>
+  <textarea id="edges" rows="4" cols="40" placeholder="e.g., 1 2, 2 3, 4 5, 5 6"></textarea><br><br>
+
+  <button type="submit">Visualize</button>
+</form>
+
+<p id="summary"></p>
 <svg id="graph"></svg>
 
-<script>
-const data = {
-  nodes: [
-    {id: 1, group: 1},
-    {id: 2, group: 1},
-    {id: 3, group: 1},
-    {id: 4, group: 2},
-    {id: 5, group: 2},
-    {id: 6, group: 2}
-  ],
-  links: [
-    {source: 1, target: 2},
-    {source: 2, target: 3},
-    {source: 4, target: 5},
-    {source: 5, target: 6}
-  ]
-};
-
-const svg = d3.select("#graph");
-const width = parseInt(svg.style("width"));
-const height = parseInt(svg.style("height"));
-
-const color = d3.scaleOrdinal(d3.schemeCategory10);
-
-const simulation = d3.forceSimulation(data.nodes)
-  .force("link", d3.forceLink(data.links).id(d => d.id).distance(120))
-  .force("charge", d3.forceManyBody().strength(-300))
-  .force("center", d3.forceCenter(width / 2, height / 2));
-
-const link = svg.append("g")
-  .attr("stroke", "#aaa")
-  .attr("stroke-width", 1.5)
-  .selectAll("line")
-  .data(data.links)
-  .enter().append("line");
-
-const node = svg.append("g")
-  .selectAll("circle")
-  .data(data.nodes)
-  .enter().append("circle")
-  .attr("r", 10)
-  .attr("fill", d => color(d.group))
-  .call(drag(simulation));
-
-const label = svg.append("g")
-  .selectAll("text")
-  .data(data.nodes)
-  .enter().append("text")
-  .text(d => d.id)
-  .attr("font-size", 12)
-  .attr("dy", 4)
-  .attr("text-anchor", "middle");
-
-function drag(simulation) {
-  function dragstarted(event, d) {
-    if (!event.active) simulation.alphaTarget(0.3).restart();
-    d.fx = d.x;
-    d.fy = d.y;
-  }
-  function dragged(event, d) {
-    d.fx = event.x;
-    d.fy = event.y;
-  }
-  function dragended(event, d) {
-    if (!event.active) simulation.alphaTarget(0);
-    d.fx = null;
-    d.fy = null;
-  }
-  return d3.drag()
-    .on("start", dragstarted)
-    .on("drag", dragged)
-    .on("end", dragended);
-}
-
-simulation.on("tick", () => {
-  link
-    .attr("x1", d => d.source.x)
-    .attr("y1", d => d.source.y)
-    .attr("x2", d => d.target.x)
-    .attr("y2", d => d.target.y);
-
-  node
-    .attr("cx", d => d.x)
-    .attr("cy", d => d.y);
-
-  label
-    .attr("x", d => d.x)
-    .attr("y", d => d.y);
-});
-</script>
+<script src="script.js"></script>
 </body>
 </html>

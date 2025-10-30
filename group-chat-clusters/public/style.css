@@ -1,0 +1,28 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f5f7fa;
+  text-align: center;
+}
+
+form {
+  margin: 20px auto;
+  padding: 15px;
+  width: 400px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+svg {
+  border: 1px solid #ddd;
+  margin-top: 20px;
+}
